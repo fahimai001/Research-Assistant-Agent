@@ -1,176 +1,176 @@
-# import os
-# from typing import Dict, Any
+import os
+from typing import Dict, Any
 
-# from dotenv import load_dotenv
-# from langchain_google_genai import ChatGoogleGenerativeAI
+from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
 
-# from prompts import create_prompt_templates
-# from output_schemas import define_output_schemas
-# from database import initialize_database
-# from document_processor import process_research_paper, upload_research_paper_file, extract_text_from_pdf, extract_text_from_docx
-# from recommendation_topics import generate_recommendations
-# from recommendation_papers import generate_paper_recommendations
-# from web_search import search_web
+from prompts import create_prompt_templates
+from output_schemas import define_output_schemas
+from database import initialize_database
+from document_processor import process_research_paper, upload_research_paper_file, extract_text_from_pdf, extract_text_from_docx
+from recommendation_topics import generate_recommendations
+from recommendation_papers import generate_paper_recommendations
+from web_search import search_web
 
-# def load_environment():
-#     """Load environment variables"""
-#     load_dotenv()
-#     return os.getenv("GEMINI_API_KEY")
+def load_environment():
+    """Load environment variables"""
+    load_dotenv()
+    return os.getenv("GEMINI_API_KEY")
 
-# def initialize_model(api_key):
-#     """Initialize Gemini model"""
-#     return ChatGoogleGenerativeAI(
-#         model="gemini-2.0-flash",
-#         google_api_key=api_key,
-#         temperature=0.7,
-#         max_tokens=4000,
-#     )
+def initialize_model(api_key):
+    """Initialize Gemini model"""
+    return ChatGoogleGenerativeAI(
+        model="gemini-2.0-flash",
+        google_api_key=api_key,
+        temperature=0.7,
+        max_tokens=4000,
+    )
 
-# def create_chains(model, report_prompt, recommendation_prompt, paper_summary_prompt, paper_recommendation_prompt, TopicRecommendations, PaperRecommendations):
-#     """Create processing chains for research tasks"""
-#     from langchain_core.runnables import RunnablePassthrough
-#     from langchain_core.output_parsers import StrOutputParser, JsonOutputParser
+def create_chains(model, report_prompt, recommendation_prompt, paper_summary_prompt, paper_recommendation_prompt, TopicRecommendations, PaperRecommendations):
+    """Create processing chains for research tasks"""
+    from langchain_core.runnables import RunnablePassthrough
+    from langchain_core.output_parsers import StrOutputParser, JsonOutputParser
     
-#     report_chain = (
-#         {"topic": RunnablePassthrough()}
-#         | report_prompt
-#         | model
-#         | StrOutputParser()
-#     )
+    report_chain = (
+        {"topic": RunnablePassthrough()}
+        | report_prompt
+        | model
+        | StrOutputParser()
+    )
 
-#     # Fix: Use pydantic_schema instead of pydantic_object
-#     recommendation_chain = (
-#         {"topic": RunnablePassthrough()}
-#         | recommendation_prompt
-#         | model
-#         | JsonOutputParser(pydantic_schema=TopicRecommendations)
-#     )
+    # Fix: Use pydantic_schema instead of pydantic_object
+    recommendation_chain = (
+        {"topic": RunnablePassthrough()}
+        | recommendation_prompt
+        | model
+        | JsonOutputParser(pydantic_schema=TopicRecommendations)
+    )
 
-#     paper_summary_chain = (
-#         {"paper_content": RunnablePassthrough()}
-#         | paper_summary_prompt
-#         | model
-#         | StrOutputParser()
-#     )
+    paper_summary_chain = (
+        {"paper_content": RunnablePassthrough()}
+        | paper_summary_prompt
+        | model
+        | StrOutputParser()
+    )
 
-#     # Fix: Use pydantic_schema instead of pydantic_object
-#     paper_recommendation_chain = (
-#         {"paper_content": RunnablePassthrough()}
-#         | paper_recommendation_prompt
-#         | model
-#         | JsonOutputParser(pydantic_schema=PaperRecommendations)
-#     )
+    # Fix: Use pydantic_schema instead of pydantic_object
+    paper_recommendation_chain = (
+        {"paper_content": RunnablePassthrough()}
+        | paper_recommendation_prompt
+        | model
+        | JsonOutputParser(pydantic_schema=PaperRecommendations)
+    )
     
-#     return report_chain, recommendation_chain, paper_summary_chain, paper_recommendation_chain
+    return report_chain, recommendation_chain, paper_summary_chain, paper_recommendation_chain
 
-# def generate_report(topic: str, report_chain) -> str:
-#     """Generate a detailed report on the given topic"""
-#     return report_chain.invoke(topic)
+def generate_report(topic: str, report_chain) -> str:
+    """Generate a detailed report on the given topic"""
+    return report_chain.invoke(topic)
 
-# def create_full_report(topic: str, report_content: str, recommendations_content: str) -> str:
-#     """Create a full markdown report combining the report and recommendations"""
-#     from datetime import datetime
+def create_full_report(topic: str, report_content: str, recommendations_content: str) -> str:
+    """Create a full markdown report combining the report and recommendations"""
+    from datetime import datetime
     
-#     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-#     full_report = f"""
-# # Research Report: {topic}
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    full_report = f"""
+# Research Report: {topic}
 
-# *Generated on: {timestamp}*
+*Generated on: {timestamp}*
 
-# ---
+---
 
-# {report_content}
+{report_content}
 
-# ---
+---
 
-# {recommendations_content}
+{recommendations_content}
 
-# ---
+---
 
-# *This report was generated by AI Research Assistant*
-# """
-#     return full_report
+*This report was generated by AI Research Assistant*
+"""
+    return full_report
 
-# def create_full_paper_analysis(filename: str, summary_content: str, recommendations_content: str) -> str:
-#     """Create a full markdown report for paper analysis"""
-#     from datetime import datetime
+def create_full_paper_analysis(filename: str, summary_content: str, recommendations_content: str) -> str:
+    """Create a full markdown report for paper analysis"""
+    from datetime import datetime
     
-#     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-#     full_report = f"""
-# # Research Paper Analysis: {filename}
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    full_report = f"""
+# Research Paper Analysis: {filename}
 
-# *Generated on: {timestamp}*
+*Generated on: {timestamp}*
 
-# ---
+---
 
-# ## Paper Summary
+## Paper Summary
 
-# {summary_content}
+{summary_content}
 
-# ---
+---
 
-# {recommendations_content}
+{recommendations_content}
 
-# ---
+---
 
-# *This analysis was generated by AI Research Assistant*
-# """
-#     return full_report
+*This analysis was generated by AI Research Assistant*
+"""
+    return full_report
 
-# def display_markdown(content: str, use_markdown_display: bool = True):
-#     """Display content as rendered markdown if in IPython environment"""
-#     try:
-#         if use_markdown_display:
-#             from IPython.display import Markdown, display
-#             display(Markdown(content))
-#         else:
-#             print(content)
-#     except:
-#         print(content)
+def display_markdown(content: str, use_markdown_display: bool = True):
+    """Display content as rendered markdown if in IPython environment"""
+    try:
+        if use_markdown_display:
+            from IPython.display import Markdown, display
+            display(Markdown(content))
+        else:
+            print(content)
+    except:
+        print(content)
 
-# def research_topic(topic: str, report_chain=None, recommendation_chain=None, model=None) -> Dict[str, Any]:
-#     """Conduct research on a given topic"""
-#     from document_processor import save_markdown_file
+def research_topic(topic: str, report_chain=None, recommendation_chain=None, model=None) -> Dict[str, Any]:
+    """Conduct research on a given topic"""
+    from document_processor import save_markdown_file
     
-#     try:
-#         print(f"Researching topic: {topic}")
+    try:
+        print(f"Researching topic: {topic}")
         
-#         print("- Generating detailed report...")
-#         report_content = generate_report(topic, report_chain)
+        print("- Generating detailed report...")
+        report_content = generate_report(topic, report_chain)
         
-#         print("- Finding related topics via web search...")
-#         recommendations_content = generate_recommendations(topic, recommendation_chain, model)
+        print("- Finding related topics via web search...")
+        recommendations_content = generate_recommendations(topic, recommendation_chain, model)
         
-#         full_report = create_full_report(topic, report_content, recommendations_content)
+        full_report = create_full_report(topic, report_content, recommendations_content)
         
-#         report_filename = save_markdown_file(topic, full_report)
+        report_filename = save_markdown_file(topic, full_report)
         
-#         return {
-#             "topic": topic,
-#             "report_content": report_content,
-#             "recommendations_content": recommendations_content,
-#             "full_report": full_report,
-#             "report_filename": report_filename,
-#             "success": True
-#         }
+        return {
+            "topic": topic,
+            "report_content": report_content,
+            "recommendations_content": recommendations_content,
+            "full_report": full_report,
+            "report_filename": report_filename,
+            "success": True
+        }
     
-#     except Exception as e:
-#         return {
-#             "topic": topic,
-#             "success": False,
-#             "error": f"Error researching topic: {str(e)}"
-#         }
+    except Exception as e:
+        return {
+            "topic": topic,
+            "success": False,
+            "error": f"Error researching topic: {str(e)}"
+        }
 
-# def display_results(result: Dict[str, Any], display_type: str = "report"):
-#     """Display research results in a formatted way"""
-#     if not result.get("success", False):
-#         print(f"Error: {result.get('error', 'Unknown error occurred')}")
-#         return
+def display_results(result: Dict[str, Any], display_type: str = "report"):
+    """Display research results in a formatted way"""
+    if not result.get("success", False):
+        print(f"Error: {result.get('error', 'Unknown error occurred')}")
+        return
     
-#     if display_type == "report":
-#         print(f"Research report saved to: {result.get('report_filename', 'Unknown')}")
-#         display_markdown(result.get("full_report", ""))
+    if display_type == "report":
+        print(f"Research report saved to: {result.get('report_filename', 'Unknown')}")
+        display_markdown(result.get("full_report", ""))
     
-#     elif display_type == "paper_analysis":
-#         print(f"Paper analysis saved to: {result.get('report_filename', 'Unknown')}")
-#         display_markdown(result.get("full_analysis", ""))
+    elif display_type == "paper_analysis":
+        print(f"Paper analysis saved to: {result.get('report_filename', 'Unknown')}")
+        display_markdown(result.get("full_analysis", ""))
