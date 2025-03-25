@@ -7,7 +7,6 @@ from langchain_core.output_parsers import StrOutputParser
 from web_search import search_web
 
 def is_academic_url(url):
-    """Check if a URL is likely to be a valid academic source"""
     academic_domains = [
         '.edu', 'arxiv.org', 'scholar.google', 'researchgate.net', 'ieee.org', 'acm.org',
         'springer.com', 'sciencedirect.com', 'nature.com', 'science.org', 'jstor.org',
@@ -17,11 +16,7 @@ def is_academic_url(url):
     return any(domain in url.lower() for domain in academic_domains)
 
 def format_search_url(title, source="google_scholar"):
-    """Format a search URL for paper title that's guaranteed to work"""
-    # Sanitize and encode title for URL
     encoded_title = urllib.parse.quote_plus(title)
-    
-    # Dictionary of reliable academic search engines
     search_engines = {
         "google_scholar": f"https://scholar.google.com/scholar?q={encoded_title}",
         "arxiv": f"https://arxiv.org/search/?query={encoded_title}&searchtype=all",
@@ -29,14 +24,10 @@ def format_search_url(title, source="google_scholar"):
         "pubmed": f"https://pubmed.ncbi.nlm.nih.gov/?term={encoded_title}",
         "core_ac": f"https://core.ac.uk/search?q={encoded_title}"
     }
-    
-    # Return requested search engine URL, or default to Google Scholar
     return search_engines.get(source, search_engines["google_scholar"])
 
 def generate_paper_recommendations(paper_content, paper_recommendation_chain=None, model=None) -> str:
-    """Generate recommendations for related papers using improved web crawling"""
     try:
-        # Extract key phrases from the paper
         key_phrases_prompt = ChatPromptTemplate.from_template(
             """
             Extract 5 key technical phrases, concepts, or terms from the following paper that would be most useful for finding related research.
@@ -49,7 +40,6 @@ def generate_paper_recommendations(paper_content, paper_recommendation_chain=Non
         key_phrases_chain = key_phrases_prompt | model | StrOutputParser()
         key_phrases = key_phrases_chain.invoke({"paper_content": paper_content}).split(",")
         
-        # Extract potential author names for better searching
         authors_prompt = ChatPromptTemplate.from_template(
             """
             Extract just the names of the authors from this paper content, if they can be identified.
@@ -69,72 +59,46 @@ def generate_paper_recommendations(paper_content, paper_recommendation_chain=Non
         except:
             main_author = None
         
-        # Construct more effective search queries
         search_queries = []
         for phrase in key_phrases:
             phrase = phrase.strip()
-            if len(phrase) < 3:  # Skip very short phrases
+            if len(phrase) < 3:
                 continue
-                
-            # Create targeted search queries
             search_queries.append(f"{phrase} research paper")
-            
-            # Add author to some queries if available
             if main_author:
                 search_queries.append(f"{phrase} {main_author} research")
         
-        # Randomize order to get more variety
         import random
         random.shuffle(search_queries)
         
-        # Search for related papers using the queries
         papers = []
         seen_urls = set()
-        for query in search_queries[:10]:  # Limit to first 10 queries
-            if len(papers) >= 12:  # Get more than we need so we can filter
+        for query in search_queries[:10]:
+            if len(papers) >= 12:
                 break
-                
-            # Add delay between requests
             time.sleep(0.5)
-            
-            # Search the web
             search_results = search_web(query, num_results=5)
             for result in search_results:
                 if len(papers) >= 12:
                     break
-                
                 title = result['title']
                 url = result['url']
-                
-                # Skip if we've seen this URL
                 if url in seen_urls:
                     continue
-                    
                 seen_urls.add(url)
-                
-                # Skip non-academic-looking results
                 if not is_academic_url(url):
                     continue
-                    
-                # Skip very short titles or titles that don't look like papers
                 if len(title) < 10 or not re.search(r'[A-Z]', title):
                     continue
-                
-                # Add the paper to our results
                 papers.append({
                     'title': title,
                     'url': url,
                     'phrase': query
                 })
         
-        # Process the best results
-        top_papers = papers[:5]  # Take only what we need
-        
-        # If we don't have enough papers, generate some with the model
+        top_papers = papers[:5]
         if len(top_papers) < 5:
             remaining = 5 - len(top_papers)
-            
-            # Extract title for better recommendations
             title_prompt = ChatPromptTemplate.from_template(
                 """
                 Extract only the title of this paper. Return only the title with no additional text or punctuation.
@@ -147,8 +111,6 @@ def generate_paper_recommendations(paper_content, paper_recommendation_chain=Non
                 paper_title = title_chain.invoke({"paper_content": paper_content})
             except:
                 paper_title = "the paper"
-            
-            # Generate realistic paper recommendations
             paper_gen_prompt = ChatPromptTemplate.from_template(
                 f"""
                 Based on the paper titled "{paper_title}" and the key phrases {', '.join(key_phrases)}, 
@@ -172,21 +134,16 @@ def generate_paper_recommendations(paper_content, paper_recommendation_chain=Non
             )
             paper_gen_chain = paper_gen_prompt | model | StrOutputParser()
             additional_papers = paper_gen_chain.invoke({})
-            
-            # Parse the generated papers
             current_paper = {}
             for line in additional_papers.split('\n'):
                 line = line.strip()
                 if not line:
                     continue
-                
                 if line.upper().startswith('PAPER:'):
                     if current_paper and 'title' in current_paper:
-                        # Create search URL for the paper
                         search_url = format_search_url(current_paper['title'])
                         current_paper['url'] = search_url
                         top_papers.append(current_paper)
-                        
                     current_paper = {'title': line[6:].strip()}
                 elif line.upper().startswith('AUTHORS:'):
                     current_paper['authors'] = line[8:].strip()
@@ -194,21 +151,16 @@ def generate_paper_recommendations(paper_content, paper_recommendation_chain=Non
                     current_paper['year'] = line[5:].strip()
                 elif line.upper().startswith('FIELD:'):
                     current_paper['field'] = line[6:].strip()
-            
             if current_paper and 'title' in current_paper:
-                # Create search URL for the last paper
                 search_url = format_search_url(current_paper['title'])
                 current_paper['url'] = search_url
                 top_papers.append(current_paper)
         
-        # Generate descriptions for each paper
         formatted_recommendations = "# Related Research Papers You May Be Interested In\n\n"
         
-        # Generate descriptions for all papers at once for efficiency
         if top_papers:
             titles_list = [p.get('title', 'Untitled Paper') for p in top_papers[:5]]
             titles_text = '\n'.join([f"{i+1}. {title}" for i, title in enumerate(titles_list)])
-            
             batch_desc_prompt = ChatPromptTemplate.from_template(
                 f"""
                 I have 5 academic papers related to research on topics including {', '.join(key_phrases)}.
@@ -224,15 +176,11 @@ def generate_paper_recommendations(paper_content, paper_recommendation_chain=Non
                 etc.
                 """
             )
-            
             try:
                 batch_desc_chain = batch_desc_prompt | model | StrOutputParser()
                 descriptions = batch_desc_chain.invoke({})
-                
-                # Parse descriptions
                 desc_lines = descriptions.strip().split('\n')
                 desc_dict = {}
-                
                 for line in desc_lines:
                     if re.match(r'^\d+\.', line):
                         parts = line.split('.', 1)
@@ -241,29 +189,20 @@ def generate_paper_recommendations(paper_content, paper_recommendation_chain=Non
                             if 0 <= index < len(top_papers):
                                 desc_dict[index] = parts[1].strip()
             except:
-                # Fallback to generic descriptions
                 desc_dict = {}
         else:
             desc_dict = {}
         
-        # Create the formatted recommendations
         for i, paper in enumerate(top_papers[:5]):
             title = paper.get('title', '')
             url = paper.get('url', '')
-            
-            # Generate metadata if missing
             authors = paper.get('authors', 'Various authors')
             year = paper.get('year', '2023')
-            
-            # Get description from batch generation or create fallback
             if i in desc_dict:
                 description = desc_dict[i]
             else:
-                # Use a generic description based on the key phrase
                 phrase = paper.get('phrase', '').replace(' research paper', '')
                 description = f"This paper explores {phrase} and provides valuable insights related to your research area."
-            
-            # Add the recommendation
             formatted_recommendations += f"## {i+1}. {title} ({year})\n"
             formatted_recommendations += f"**Authors:** {authors}\n\n"
             formatted_recommendations += f"{description}\n"
@@ -273,7 +212,6 @@ def generate_paper_recommendations(paper_content, paper_recommendation_chain=Non
         
     except Exception as e:
         print(f"Error in web-based paper recommendations: {str(e)}")
-        # Improved fallback that creates reliable links
         backup_prompt = ChatPromptTemplate.from_template(
             """
             I need to recommend 5 research papers related to a paper on the following topics:
@@ -293,4 +231,4 @@ def generate_paper_recommendations(paper_content, paper_recommendation_chain=Non
             """
         )
         backup_chain = backup_prompt | model | StrOutputParser()
-        return backup_chain.invoke({"paper_content": paper_content[:3000]})  # Limit content length
+        return backup_chain.invoke({"paper_content": paper_content[:3000]})
