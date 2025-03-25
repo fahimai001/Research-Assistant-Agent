@@ -3,15 +3,11 @@ import sqlite3
 from typing import Dict, Optional
 
 def initialize_database(db_path: str = None):
-    """Initialize SQLite database for storing papers"""
-    # Use environment variable if db_path not provided
     if db_path is None:
         db_path = os.environ.get('DATABASE_PATH', "../data/research_papers.db")
     
-    # Ensure the directory exists
     os.makedirs(os.path.dirname(db_path), exist_ok=True)
     
-    # Print debug info
     print(f"Initializing database at: {db_path}")
     
     conn = sqlite3.connect(db_path)
@@ -30,12 +26,9 @@ def initialize_database(db_path: str = None):
     conn.close()
 
 def save_file_to_database(filename: str, content: str, file_type: str, db_path: str = None):
-    """Save file content to SQLite database"""
-    # Use environment variable if db_path not provided
     if db_path is None:
         db_path = os.environ.get('DATABASE_PATH', "../data/research_papers.db")
     
-    # Print debug info
     print(f"Saving file to database: {filename} at {db_path}")
     
     conn = sqlite3.connect(db_path)
@@ -48,14 +41,11 @@ def save_file_to_database(filename: str, content: str, file_type: str, db_path: 
     conn.commit()
     conn.close()
     
-    # Print debug info
     print(f"File saved with ID: {paper_id}")
     
     return paper_id
 
 def save_summary_to_database(paper_id: int, summary: str, db_path: str = None):
-    """Save paper summary to database"""
-    # Use environment variable if db_path not provided
     if db_path is None:
         db_path = os.environ.get('DATABASE_PATH', "../data/research_papers.db")
     
@@ -69,12 +59,9 @@ def save_summary_to_database(paper_id: int, summary: str, db_path: str = None):
     conn.close()
 
 def get_paper_from_database(paper_id: int, db_path: str = None):
-    """Retrieve paper content from database"""
-    # Use environment variable if db_path not provided
     if db_path is None:
         db_path = os.environ.get('DATABASE_PATH', "../data/research_papers.db")
     
-    # Print debug info
     print(f"Getting paper ID {paper_id} from database at {db_path}")
     
     conn = sqlite3.connect(db_path)
@@ -84,7 +71,6 @@ def get_paper_from_database(paper_id: int, db_path: str = None):
     conn.close()
     
     if result:
-        # Print debug info
         print(f"Found paper: {result[0]}")
         
         return {
