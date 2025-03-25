@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h2>Welcome to AI Research Assistant Agent</h2>
+        <p>Enhance your research with AI-powered analysis and recommendations</p>
+    </div>
+</section>
+
+<section class="features">
+    <div class="feature-card">
+        <div class="feature-icon">📚</div>
+        <h3>Topic Analysis</h3>
+        <p>Generate comprehensive reports on any research topic with key concepts, historical context, and future directions.</p>
+        <a href="{{ url_for('topic_analysis') }}" class="btn primary-btn">Start Topic Analysis</a>
+    </div>
+    
+    <div class="feature-card">
+        <div class="feature-icon">📄</div>
+        <h3>Research Paper Analysis</h3>
+        <p>Upload research papers for AI-powered summaries and discover related papers to enhance your literature review.</p>
+        <a href="{{ url_for('paper_analysis') }}" class="btn primary-btn">Start Paper Analysis</a>
+    </div>
+</section>
+
+<section class="how-it-works">
+    <h2>How It Works</h2>
+    <div class="steps">
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h3>Choose Analysis Type</h3>
+                <p>Select between Topic Analysis or Research Paper Analysis based on your needs.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h3>Input Your Data</h3>
+                <p>Enter a topic name or upload a research paper (PDF or DOCX).</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h3>Review Results</h3>
+                <p>Get comprehensive analysis and explore related recommendations.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="feature-card">
+    <div class="feature-icon">❓</div>
+    <h3>Paper Q&A</h3>
+    <p>Ask specific questions about uploaded research papers and get AI-powered answers using advanced RAG technology.</p>
+    <a href="{{ url_for('paper_qa') }}" class="btn primary-btn">Start Paper Q&A</a>
+</div>
+
+{% endblock %}

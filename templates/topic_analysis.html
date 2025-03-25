@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-header">
+    <h2>Topic Analysis</h2>
+    <p>Generate a comprehensive research report on any topic</p>
+</section>
+
+<section class="form-container">
+    <form action="{{ url_for('topic_analysis') }}" method="post">
+        <div class="form-group">
+            <label for="topic">Enter Research Topic:</label>
+            <input type="text" id="topic" name="topic" placeholder="e.g., Quantum Computing, Climate Change, Artificial Intelligence" required>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn primary-btn">Generate Report</button>
+        </div>
+    </form>
+</section>
+
+<section class="info-section">
+    <h3>About Topic Analysis</h3>
+    <p>Our AI Research Assistant will generate a detailed report on your chosen topic, including:</p>
+    <ul>
+        <li>Introduction and key concepts</li>
+        <li>Historical context and development</li>
+        <li>Current state and applications</li>
+        <li>Future directions and potential developments</li>
+        <li>Related topics for further exploration</li>
+    </ul>
+    <p>The analysis process may take a few moments to complete as our AI assistant gathers and processes information.</p>
+</section>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-header">
+    <h2>Research Paper Analysis</h2>
+    <p>Upload a research paper to generate an AI-powered summary and find related papers</p>
+</section>
+
+<section class="form-container">
+    <form action="{{ url_for('paper_analysis') }}" method="post" enctype="multipart/form-data">
+        <div class="form-group file-upload">
+            <label for="file">Upload Research Paper:</label>
+            <input type="file" id="file" name="file" accept=".pdf,.docx,.doc" required>
+            <p class="file-info">Accepted formats: PDF, DOCX (Max size: 16MB)</p>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn primary-btn">Analyze Paper</button>
+        </div>
+    </form>
+</section>
+
+<section class="info-section">
+    <h3>About Paper Analysis</h3>
+    <p>Our AI Research Assistant will analyze your uploaded paper to provide:</p>
+    <ul>
+        <li>A concise yet comprehensive summary of the paper</li>
+        <li>Main objectives, methodology, and key findings</li>
+        <li>Recommendations for related research papers</li>
+        <li>Links to access related papers</li>
+    </ul>
+    <p>The analysis process may take a few moments to complete, especially for longer papers.</p>
+</section>
+{% endblock %}

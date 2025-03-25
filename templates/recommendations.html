@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-header">
+    <h2>Related Topics for: {{ topic }}</h2>
+    <div class="actions">
+        <a href="{{ url_for('generate_report', topic=topic) }}" class="btn secondary-btn">Back to Report</a>
+        <a href="{{ url_for('topic_analysis') }}" class="btn secondary-btn">New Analysis</a>
+    </div>
+</section>
+
+<section class="recommendations-container">
+    <div class="recommendations-content">
+        {{ recommendations_content|safe }}
+    </div>
+</section>
+{% endblock %}

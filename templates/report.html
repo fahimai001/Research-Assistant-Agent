@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-header">
+    <h2>Research Report: {{ topic }}</h2>
+    <div class="actions">
+        <a href="{{ url_for('topic_analysis') }}" class="btn secondary-btn">New Analysis</a>
+        {% if has_recommendations %}
+        <a href="{{ url_for('recommendations', topic=topic) }}" class="btn primary-btn">View Related Topics</a>
+        {% endif %}
+    </div>
+</section>
+
+<section class="report-container">
+    <div class="report-content">
+        {{ report_content|safe }}
+    </div>
+</section>
+{% endblock %}

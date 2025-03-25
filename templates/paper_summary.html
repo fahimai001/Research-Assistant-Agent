@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-header">
+    <h2>Paper Analysis: {{ filename }}</h2>
+    <div class="actions">
+        <a href="{{ url_for('paper_analysis') }}" class="btn secondary-btn">New Analysis</a>
+        <a href="{{ url_for('paper_recommendations', paper_id=paper_id) }}" class="btn primary-btn">View Related Papers</a>
+    </div>
+</section>
+
+<section class="report-container">
+    <h3>Paper Summary</h3>
+    <div class="report-content">
+        {{ summary_content|safe }}
+    </div>
+</section>
+{% endblock %}

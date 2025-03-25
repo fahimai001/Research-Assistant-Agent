@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="form-container">
+    <h2>Research Paper Question & Answer</h2>
+    
+    {% if not filename %}
+    <!-- File Upload Form -->
+    <form method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="file">Upload Research Paper (PDF/DOCX)</label>
+            <input type="file" name="file" id="file" accept=".pdf,.docx,.doc" required>
+            <div class="file-info">Maximum file size: 16MB</div>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn primary-btn">Upload Paper</button>
+        </div>
+    </form>
+    
+    {% else %}
+    <!-- QA Interface -->
+    <div class="upload-info">
+        <p>Active paper: <strong>{{ filename }}</strong></p>
+        <a href="{{ url_for('paper_qa', new='true') }}" class="btn secondary-btn">Upload New Paper</a>
+    </div>
+    
+    <form method="POST">
+        <div class="form-group">
+            <label for="question">Enter your question:</label>
+            <textarea name="question" id="question" rows="3" 
+                      placeholder="What is the main contribution of this paper?" 
+                      required>{% if question %}{{ question }}{% endif %}</textarea>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn primary-btn">Ask Question</button>
+        </div>
+    </form>
+    
+    {% if answer %}
+    <!-- Answer Display -->
+    <div class="answer-container">
+        <h3>Answer:</h3>
+        <div class="answer-content">
+            {{ answer|safe }}
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
+</section>
+{% endblock %}
