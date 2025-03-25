@@ -13,12 +13,10 @@ from recommendation_papers import generate_paper_recommendations
 from web_search import search_web
 
 def load_environment():
-    """Load environment variables"""
     load_dotenv()
     return os.getenv("GEMINI_API_KEY")
 
 def initialize_model(api_key):
-    """Initialize Gemini model"""
     return ChatGoogleGenerativeAI(
         model="gemini-2.0-flash",
         google_api_key=api_key,
@@ -27,7 +25,6 @@ def initialize_model(api_key):
     )
 
 def create_chains(model, report_prompt, recommendation_prompt, paper_summary_prompt, paper_recommendation_prompt, TopicRecommendations, PaperRecommendations):
-    """Create processing chains for research tasks"""
     from langchain_core.runnables import RunnablePassthrough
     from langchain_core.output_parsers import StrOutputParser, JsonOutputParser
     
@@ -38,7 +35,6 @@ def create_chains(model, report_prompt, recommendation_prompt, paper_summary_pro
         | StrOutputParser()
     )
 
-    # Fix: Use pydantic_schema instead of pydantic_object
     recommendation_chain = (
         {"topic": RunnablePassthrough()}
         | recommendation_prompt
@@ -53,7 +49,6 @@ def create_chains(model, report_prompt, recommendation_prompt, paper_summary_pro
         | StrOutputParser()
     )
 
-    # Fix: Use pydantic_schema instead of pydantic_object
     paper_recommendation_chain = (
         {"paper_content": RunnablePassthrough()}
         | paper_recommendation_prompt
@@ -64,11 +59,9 @@ def create_chains(model, report_prompt, recommendation_prompt, paper_summary_pro
     return report_chain, recommendation_chain, paper_summary_chain, paper_recommendation_chain
 
 def generate_report(topic: str, report_chain) -> str:
-    """Generate a detailed report on the given topic"""
     return report_chain.invoke(topic)
 
 def create_full_report(topic: str, report_content: str, recommendations_content: str) -> str:
-    """Create a full markdown report combining the report and recommendations"""
     from datetime import datetime
     
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -92,7 +85,6 @@ def create_full_report(topic: str, report_content: str, recommendations_content:
     return full_report
 
 def create_full_paper_analysis(filename: str, summary_content: str, recommendations_content: str) -> str:
-    """Create a full markdown report for paper analysis"""
     from datetime import datetime
     
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -118,7 +110,6 @@ def create_full_paper_analysis(filename: str, summary_content: str, recommendati
     return full_report
 
 def display_markdown(content: str, use_markdown_display: bool = True):
-    """Display content as rendered markdown if in IPython environment"""
     try:
         if use_markdown_display:
             from IPython.display import Markdown, display
@@ -129,7 +120,6 @@ def display_markdown(content: str, use_markdown_display: bool = True):
         print(content)
 
 def research_topic(topic: str, report_chain=None, recommendation_chain=None, model=None) -> Dict[str, Any]:
-    """Conduct research on a given topic"""
     from document_processor import save_markdown_file
     
     try:
@@ -162,7 +152,6 @@ def research_topic(topic: str, report_chain=None, recommendation_chain=None, mod
         }
 
 def display_results(result: Dict[str, Any], display_type: str = "report"):
-    """Display research results in a formatted way"""
     if not result.get("success", False):
         print(f"Error: {result.get('error', 'Unknown error occurred')}")
         return
