@@ -1,98 +1,98 @@
-# import os
-# import sqlite3
-# from typing import Dict, Optional
+import os
+import sqlite3
+from typing import Dict, Optional
 
-# def initialize_database(db_path: str = None):
-#     """Initialize SQLite database for storing papers"""
-#     # Use environment variable if db_path not provided
-#     if db_path is None:
-#         db_path = os.environ.get('DATABASE_PATH', "../data/research_papers.db")
+def initialize_database(db_path: str = None):
+    """Initialize SQLite database for storing papers"""
+    # Use environment variable if db_path not provided
+    if db_path is None:
+        db_path = os.environ.get('DATABASE_PATH', "../data/research_papers.db")
     
-#     # Ensure the directory exists
-#     os.makedirs(os.path.dirname(db_path), exist_ok=True)
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(db_path), exist_ok=True)
     
-#     # Print debug info
-#     print(f"Initializing database at: {db_path}")
+    # Print debug info
+    print(f"Initializing database at: {db_path}")
     
-#     conn = sqlite3.connect(db_path)
-#     cursor = conn.cursor()
-#     cursor.execute('''
-#         CREATE TABLE IF NOT EXISTS papers (
-#             id INTEGER PRIMARY KEY AUTOINCREMENT,
-#             filename TEXT NOT NULL,
-#             content TEXT NOT NULL,
-#             file_type TEXT NOT NULL,
-#             upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-#             summary TEXT
-#         )
-#     ''')
-#     conn.commit()
-#     conn.close()
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS papers (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            filename TEXT NOT NULL,
+            content TEXT NOT NULL,
+            file_type TEXT NOT NULL,
+            upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            summary TEXT
+        )
+    ''')
+    conn.commit()
+    conn.close()
 
-# def save_file_to_database(filename: str, content: str, file_type: str, db_path: str = None):
-#     """Save file content to SQLite database"""
-#     # Use environment variable if db_path not provided
-#     if db_path is None:
-#         db_path = os.environ.get('DATABASE_PATH', "../data/research_papers.db")
+def save_file_to_database(filename: str, content: str, file_type: str, db_path: str = None):
+    """Save file content to SQLite database"""
+    # Use environment variable if db_path not provided
+    if db_path is None:
+        db_path = os.environ.get('DATABASE_PATH', "../data/research_papers.db")
     
-#     # Print debug info
-#     print(f"Saving file to database: {filename} at {db_path}")
+    # Print debug info
+    print(f"Saving file to database: {filename} at {db_path}")
     
-#     conn = sqlite3.connect(db_path)
-#     cursor = conn.cursor()
-#     cursor.execute(
-#         "INSERT INTO papers (filename, content, file_type) VALUES (?, ?, ?)",
-#         (filename, content, file_type)
-#     )
-#     paper_id = cursor.lastrowid
-#     conn.commit()
-#     conn.close()
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute(
+        "INSERT INTO papers (filename, content, file_type) VALUES (?, ?, ?)",
+        (filename, content, file_type)
+    )
+    paper_id = cursor.lastrowid
+    conn.commit()
+    conn.close()
     
-#     # Print debug info
-#     print(f"File saved with ID: {paper_id}")
+    # Print debug info
+    print(f"File saved with ID: {paper_id}")
     
-#     return paper_id
+    return paper_id
 
-# def save_summary_to_database(paper_id: int, summary: str, db_path: str = None):
-#     """Save paper summary to database"""
-#     # Use environment variable if db_path not provided
-#     if db_path is None:
-#         db_path = os.environ.get('DATABASE_PATH', "../data/research_papers.db")
+def save_summary_to_database(paper_id: int, summary: str, db_path: str = None):
+    """Save paper summary to database"""
+    # Use environment variable if db_path not provided
+    if db_path is None:
+        db_path = os.environ.get('DATABASE_PATH', "../data/research_papers.db")
     
-#     conn = sqlite3.connect(db_path)
-#     cursor = conn.cursor()
-#     cursor.execute(
-#         "UPDATE papers SET summary = ? WHERE id = ?",
-#         (summary, paper_id)
-#     )
-#     conn.commit()
-#     conn.close()
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute(
+        "UPDATE papers SET summary = ? WHERE id = ?",
+        (summary, paper_id)
+    )
+    conn.commit()
+    conn.close()
 
-# def get_paper_from_database(paper_id: int, db_path: str = None):
-#     """Retrieve paper content from database"""
-#     # Use environment variable if db_path not provided
-#     if db_path is None:
-#         db_path = os.environ.get('DATABASE_PATH', "../data/research_papers.db")
+def get_paper_from_database(paper_id: int, db_path: str = None):
+    """Retrieve paper content from database"""
+    # Use environment variable if db_path not provided
+    if db_path is None:
+        db_path = os.environ.get('DATABASE_PATH', "../data/research_papers.db")
     
-#     # Print debug info
-#     print(f"Getting paper ID {paper_id} from database at {db_path}")
+    # Print debug info
+    print(f"Getting paper ID {paper_id} from database at {db_path}")
     
-#     conn = sqlite3.connect(db_path)
-#     cursor = conn.cursor()
-#     cursor.execute("SELECT filename, content, file_type, summary FROM papers WHERE id = ?", (paper_id,))
-#     result = cursor.fetchone()
-#     conn.close()
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute("SELECT filename, content, file_type, summary FROM papers WHERE id = ?", (paper_id,))
+    result = cursor.fetchone()
+    conn.close()
     
-#     if result:
-#         # Print debug info
-#         print(f"Found paper: {result[0]}")
+    if result:
+        # Print debug info
+        print(f"Found paper: {result[0]}")
         
-#         return {
-#             "filename": result[0],
-#             "content": result[1],
-#             "file_type": result[2],
-#             "summary": result[3]
-#         }
-#     else:
-#         print(f"Paper ID {paper_id} not found in database")
-#         return None
+        return {
+            "filename": result[0],
+            "content": result[1],
+            "file_type": result[2],
+            "summary": result[3]
+        }
+    else:
+        print(f"Paper ID {paper_id} not found in database")
+        return None
