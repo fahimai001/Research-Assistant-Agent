@@ -18,6 +18,7 @@
                     <li><a href="{{ url_for('index') }}">Home</a></li>
                     <li><a href="{{ url_for('topic_analysis') }}">Topic Analysis</a></li>
                     <li><a href="{{ url_for('paper_analysis') }}">Research Paper Analysis</a></li>
+                    <li><a href="{{ url_for('paper_qa') }}">Research Paper Question & Answer</a></li>
                 </ul>
             </nav>
         </header>
@@ -36,9 +37,6 @@
             {% block content %}{% endblock %}
         </div>
         
-        <footer>
-            <p>&copy; 2025 AI Research Assistant Agent. All rights reserved.</p>
-        </footer>
     </div>
 </body>
 </html>
