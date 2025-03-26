@@ -24,7 +24,7 @@ from src.rag import (
     create_rag_chain
 )
 
-from output_schemas import define_output_schemas
+from recommendations.output_schemas import define_output_schemas
 from database import initialize_database, get_paper_from_database
 from document_processor import process_research_paper, upload_research_paper_file
 

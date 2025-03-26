@@ -10,7 +10,7 @@ from agent import (
     display_results,
     create_prompt_templates
 )
-from output_schemas import define_output_schemas
+from recommendations.output_schemas import define_output_schemas
 from database import initialize_database
 from document_processor import process_research_paper, upload_research_paper_file
 

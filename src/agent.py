@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 from prompts import create_prompt_templates
-from output_schemas import define_output_schemas
+from recommendations.output_schemas import define_output_schemas
 from database import initialize_database
 from document_processor import process_research_paper, upload_research_paper_file, extract_text_from_pdf, extract_text_from_docx
 from recommendations.recommendation_topics import generate_recommendations
