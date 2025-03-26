@@ -22,6 +22,13 @@
         <p>Upload research papers for AI-powered summaries and discover related papers to enhance your literature review.</p>
         <a href="{{ url_for('paper_analysis') }}" class="btn primary-btn">Start Paper Analysis</a>
     </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">❓</div>
+        <h3>Paper Q&A</h3>
+        <p>Ask specific questions about uploaded research papers and get instant AI-powered answers with cited sources.</p>
+        <a href="{{ url_for('paper_qa') }}" class="btn primary-btn">Start Q&A</a>
+    </div>
 </section>
 
 <section class="how-it-works">
@@ -31,31 +38,24 @@
             <div class="step-number">1</div>
             <div class="step-content">
                 <h3>Choose Analysis Type</h3>
-                <p>Select between Topic Analysis or Research Paper Analysis based on your needs.</p>
+                <p>Select between Topic Analysis, Paper Analysis, or Paper Q&A based on your research needs.</p>
             </div>
         </div>
         <div class="step">
             <div class="step-number">2</div>
             <div class="step-content">
                 <h3>Input Your Data</h3>
-                <p>Enter a topic name or upload a research paper (PDF or DOCX).</p>
+                <p>Enter a topic name, upload research papers, or submit specific questions based on your selection.</p>
             </div>
         </div>
         <div class="step">
             <div class="step-number">3</div>
             <div class="step-content">
                 <h3>Review Results</h3>
-                <p>Get comprehensive analysis and explore related recommendations.</p>
+                <p>Get comprehensive analysis, related recommendations, or precise answers within seconds.</p>
             </div>
         </div>
     </div>
 </section>
-
-<div class="feature-card">
-    <div class="feature-icon">❓</div>
-    <h3>Paper Q&A</h3>
-    <p>Ask specific questions about uploaded research papers and get AI-powered answers using advanced RAG technology.</p>
-    <a href="{{ url_for('paper_qa') }}" class="btn primary-btn">Start Paper Q&A</a>
-</div>
 
 {% endblock %}
