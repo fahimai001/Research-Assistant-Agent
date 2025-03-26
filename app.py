@@ -150,7 +150,7 @@ def recommendations(topic):
             flash('Research Assistant components not initialized properly')
             return redirect(url_for('index'))
         
-        from recommendation_topics import generate_recommendations
+        from recommendations.recommendation_topics import generate_recommendations
         
         recommendations_content = generate_recommendations(
             topic,
@@ -250,7 +250,7 @@ def paper_recommendations(paper_id):
             flash('Research Assistant components not initialized properly')
             return redirect(url_for('index'))
         
-        from recommendation_papers import generate_paper_recommendations
+        from recommendations.recommendation_papers import generate_paper_recommendations
         
         paper_data = get_paper_from_database(paper_id, app.config['DATABASE_PATH'])
         if not paper_data:

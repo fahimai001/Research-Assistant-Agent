@@ -4,7 +4,7 @@ import urllib.parse
 from typing import List, Dict, Any
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from web_search import search_web
+from recommendations.web_search import search_web
 
 def is_academic_url(url):
     academic_domains = [

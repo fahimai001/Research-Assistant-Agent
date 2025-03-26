@@ -79,7 +79,7 @@ def upload_research_paper_file(file_path: str) -> Dict[str, Any]:
 
 def process_research_paper(paper_id: int, paper_summary_chain=None, paper_recommendation_chain=None, model=None) -> Dict[str, Any]:
     try:
-        from recommendation_papers import generate_paper_recommendations
+        from recommendations.recommendation_papers import generate_paper_recommendations
         paper_data = get_paper_from_database(paper_id)
         if not paper_data:
             return {"paper_id": paper_id, "success": False, "error": "Paper not found in database"}

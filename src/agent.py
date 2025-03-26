@@ -8,9 +8,9 @@ from prompts import create_prompt_templates
 from output_schemas import define_output_schemas
 from database import initialize_database
 from document_processor import process_research_paper, upload_research_paper_file, extract_text_from_pdf, extract_text_from_docx
-from recommendation_topics import generate_recommendations
-from recommendation_papers import generate_paper_recommendations
-from web_search import search_web
+from recommendations.recommendation_topics import generate_recommendations
+from recommendations.recommendation_papers import generate_paper_recommendations
+from recommendations.web_search import search_web
 
 def load_environment():
     load_dotenv()
