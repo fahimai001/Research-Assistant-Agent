@@ -44,3 +44,4 @@ An AI-powered tool designed to streamline academic research through automated co
     `GEMINI_API_KEY=your_api_key_here`
 
 4. Run the application:
+    `python app.py`
