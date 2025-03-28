@@ -31,7 +31,7 @@ from document_processor import process_research_paper, upload_research_paper_fil
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'uploads')
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max upload size
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
 app.config['DATABASE_PATH'] = os.path.abspath(os.path.join(os.getcwd(), 'data', 'research_papers.db'))
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
