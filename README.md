@@ -38,4 +38,9 @@ An AI-powered tool designed to streamline academic research through automated co
 2. Install dependencies:
     `pip install -r requirements.txt`
 
-    
+3. Set up environment variables:
+    * Create .env file
+    * Add your Gemini API key:
+    `GEMINI_API_KEY=your_api_key_here`
+
+4. Run the application:
