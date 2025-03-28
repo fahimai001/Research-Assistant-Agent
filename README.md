@@ -34,3 +34,8 @@ An AI-powered tool designed to streamline academic research through automated co
    ```bash
    git clone https://github.com/fahimai001/Research-Assistant-Agent.git
    cd Research-Assistant-Agent
+
+2. Install dependencies:
+    `pip install -r requirements.txt`
+
+    
